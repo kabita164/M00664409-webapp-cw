@@ -30,36 +30,37 @@
         </header>
         <div class="container">
             
-            <main>
+            <main class="my-5">
                 <div v-if="showProducts" class="products-page">
-                    <div v-for="product in products">
-                        <!-- <figure>
-                            <img v-bind:src="product.image" alt="">
-                        </figure> -->
-                        <h2 v-text="product.title"></h2>
-                        <p v-html="product.description"></p>
-                        <p>Price: £{{product.price}}</p>
+                    <div v-for="product in products" class="product m-4">
+                        <div class="product-details">
+                            <div>
+                                <p>Subject: {{product.subject}}</p>
+                                <p>Location: {{product.location}}</p>
+                                <p>Price: £{{product.price}}</p>
+                                <p>Spaces: {{product.spaces - cartCount(product.id)}}</p>
+                            </div>
+                            <div class="icon">
+                                <span :class="product.icon"></span>
+                            </div>
+                        </div>
                         <div>
                             <button v-on:click="addToCart(product)" :disabled="!canAddToCart(product)" class="btn btn-primary">
                                 Add to cart
                             </button>
-                            <span v-if="product.availableInventory === cartCount(product.id)">
+                            <span v-if="product.spaces === cartCount(product.id)">
                                 All out!
                             </span>
-                            <span v-else-if="product.availableInventory - cartCount(product.id) < 5">
-                                Only {{product.availableInventory - cartCount(product.id)}} left!
-                            </span>
-                            <span v-else>Buy now!</span>
                         </div>
                     </div>
                 </div>
                 <div v-else class="checkout-page">
-                    
+                    <h1>Shopping Cart</h1>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

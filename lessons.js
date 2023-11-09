@@ -1,0 +1,42 @@
+export const lessons = [
+  {
+    id: 1001,
+    subject: "Math",
+    location: "London",
+    price: 100,
+    spaces: 5,
+    icon: "fas fa-calculator",
+  },
+  {
+    id: 1002,
+    subject: "Math",
+    location: "Oxford",
+    price: 100,
+    spaces: 5,
+    icon: "fas fa-calculator",
+  },
+  {
+    id: 1003,
+    subject: "English",
+    location: "London",
+    price: 100,
+    spaces: 5,
+    icon: "fas fa-pen-fancy",
+  },
+  {
+    id: 1004,
+    subject: "English",
+    location: "York",
+    price: 80,
+    spaces: 5,
+    icon: "fas fa-pen-fancy",
+  },
+  {
+    id: 1005,
+    subject: "Music",
+    location: "Bristol",
+    price: 90,
+    spaces: 5,
+    icon: "fas fa-pen-fancy",
+  },
+];
