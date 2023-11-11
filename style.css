@@ -1,0 +1,47 @@
+/* DEFAULT CSS RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Lessons display */
+.products {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.product {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: aliceblue;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.product-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-details p:not(:last-child) {
+  margin-bottom: 0;
+}
+
+.product .icon .fas {
+  font-size: 60px;
+  margin-left: 24px;
+  color: dimgray;
+}
+
+/* Cart display */
