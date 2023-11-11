@@ -29,6 +29,19 @@ var webstore = new Vue({
     showCheckout() {
       this.showProducts = this.showProducts ? false : true;
     },
+    // method to get lessons by id stored in the cart array
+    getCartProducts() {
+      return this.cart.map((cartItemId) => {
+        return this.products.find((product) => product.id === cartItemId);
+      });
+    },
+    // delete a lesson from the cart
+    removeFromCart(productId) {
+      const index = this.cart.indexOf(productId);
+      if (index > -1) {
+        this.cart.splice(index, 1);
+      }
+    },
     // method to set the sorting criteria
     setSortCriteria(criteria) {
       this.sortCriteria = criteria;

@@ -21,10 +21,10 @@
                         <span class="navbar-brand mb-0 h1" v-text="siteName"></span>
                     </div>
                     <div class="right">
-                        <button v-on:click="showCheckout" :disabled="!cartItemCount > 0" class="btn btn-dark">
+                        <button v-on:click="showCheckout" :disabled="!cartItemCount > 0 && showProducts" class="btn btn-dark">
                             {{ cartItemCount }} 
                             <span class="fas fa-cart-plus"></span>
-                            Checkout
+                            Cart
                         </button>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 
         <div class="container">
             <main class="my-5">
-                <div v-if="showProducts" class="products-page row">
+                <div v-if="showProducts" class="products-section row">
                     <!-- Sort settings section -->
                     <div class="col-3">
                         <p>Sort by</p>
@@ -110,9 +110,31 @@
                     </div>
                 </div>
 
-                <!-- Checkout section -->
-                <div v-else class="checkout-page">
-                    <h1>Shopping Cart</h1>
+                <div v-else class="cart-and-checkout">
+                    <!-- Shopping cart section -->
+                    <div class="cart-section">
+                        <h2 class="mb-4">Shopping Cart</h2>
+                        <div class="products">
+                            <div v-for="(product, index) in getCartProducts()" :key="`${product.id}-${index}`" class="cart-item product">
+                                <div class="product-details">
+                                    <div>
+                                        <p>Subject: {{product.subject}}</p>
+                                        <p>Location: {{product.location}}</p>
+                                        <p>Price: £{{product.price}}</p>
+                                        <p>Spaces: {{product.spaces - cartCount(product.id)}}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <span :class="product.icon"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button v-on:click="removeFromCart(product.id)" class="btn btn-danger">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
