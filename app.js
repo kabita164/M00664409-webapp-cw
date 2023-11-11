@@ -9,6 +9,8 @@ var webstore = new Vue({
     sortCriteria: "subject", // default sort criteria
     sortOrder: "asc", // default sort order
     cart: [],
+    customerName: "",
+    customerPhone: "",
   },
   methods: {
     addToCart(product) {
@@ -41,6 +43,15 @@ var webstore = new Vue({
       if (index > -1) {
         this.cart.splice(index, 1);
       }
+    },
+    // checkout method
+    checkout() {
+      alert(
+        `Checking out for ${this.customerName}. You will receive updates on ${this.customerPhone}`
+      );
+
+      // Go back to display lessons after checking out
+      this.showProducts = true;
     },
     // method to set the sorting criteria
     setSortCriteria(criteria) {
@@ -75,6 +86,23 @@ var webstore = new Vue({
     },
     cartItemCount: function () {
       return this.cart.length || "";
+    },
+    isCheckoutFormValid() {
+      const nameRegex = /^[a-zA-Z\s]*$/; // regex for letters only
+      const phoneRegex = /^[0-9]*$/; // regex for numbers only
+
+      // if name or phone is empty then return false
+      if (
+        this.customerName.trim().length === 0 ||
+        this.customerPhone.trim().length === 0
+      ) {
+        return false;
+      }
+
+      // return true if both name and phone number regex matches, false otherwise
+      return (
+        nameRegex.test(this.customerName) && phoneRegex.test(this.customerPhone)
+      );
     },
   },
 });
