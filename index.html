@@ -34,80 +34,88 @@
         <div class="container">
             <main class="my-5">
                 <div v-if="showProducts" class="products-section row">
-                    <!-- Sort settings section -->
-                    <div class="col-3">
-                        <p>Sort by</p>
-                        <hr>
-                        <div class="sorting-criteria">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="subject" v-model="sortCriteria" value="subject" @change="setSortCriteria('subject')" checked>
-                                <label class="form-check-label" for="subject">
-                                    Subject
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="location" v-model="sortCriteria" value="location" @change="setSortCriteria('location')">
-                                <label class="form-check-label" for="location">
-                                    Location
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="price" v-model="sortCriteria" value="price" @change="setSortCriteria('price')">
-                                <label class="form-check-label" for="price">
-                                    Price
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="spaces" v-model="sortCriteria" value="spaces" @change="setSortCriteria('spaces')">
-                                <label class="form-check-label" for="spaces">
-                                    Availability
-                                </label>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="sorting-order">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortOrder" id="asc" v-model="sortOrder" value="asc" @change="toggleSortOrder('asc')" checked>
-                                <label class="form-check-label" for="asc">
-                                    Asscending
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortOrder" id="desc" v-model="sortOrder" value="desc" @change="toggleSortOrder('desc')">
-                                <label class="form-check-label" for="desc">
-                                    Descending
-                                </label>
-                            </div>
-                        </div>
-
+                    <!-- Search input -->
+                    <div class="search-bar mb-4">
+                        <input type="text" class="form-control" v-model="searchQuery" placeholder="Search lessons...">
                     </div>
 
-                    <!-- Display of lessons -->
-                    <div class="col-9 products">
-                        <div v-for="product in sortedLessons" class="product">
-                            <div class="product-details">
+                    <div class="row">
+                        <!-- Sort settings section -->
+                        <div class="col-3">
+                            <p>Sort by</p>
+                            <hr>
+                            <div class="sorting-criteria">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="subject" v-model="sortCriteria" value="subject" @change="setSortCriteria('subject')" checked>
+                                    <label class="form-check-label" for="subject">
+                                        Subject
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="location" v-model="sortCriteria" value="location" @change="setSortCriteria('location')">
+                                    <label class="form-check-label" for="location">
+                                        Location
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="price" v-model="sortCriteria" value="price" @change="setSortCriteria('price')">
+                                    <label class="form-check-label" for="price">
+                                        Price
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="spaces" v-model="sortCriteria" value="spaces" @change="setSortCriteria('spaces')">
+                                    <label class="form-check-label" for="spaces">
+                                        Availability
+                                    </label>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="sorting-order">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortOrder" id="asc" v-model="sortOrder" value="asc" @change="toggleSortOrder('asc')" checked>
+                                    <label class="form-check-label" for="asc">
+                                        Asscending
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortOrder" id="desc" v-model="sortOrder" value="desc" @change="toggleSortOrder('desc')">
+                                    <label class="form-check-label" for="desc">
+                                        Descending
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Display of lessons -->
+                        <div class="col-9 products">
+                            <div v-for="product in sortedLessons" class="product">
+                                <div class="product-details">
+                                    <div>
+                                        <p>Subject: {{product.subject}}</p>
+                                        <p>Location: {{product.location}}</p>
+                                        <p>Price: £{{product.price}}</p>
+                                        <p>Spaces: {{product.spaces - cartCount(product.id)}}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <span :class="product.icon"></span>
+                                    </div>
+                                </div>
                                 <div>
-                                    <p>Subject: {{product.subject}}</p>
-                                    <p>Location: {{product.location}}</p>
-                                    <p>Price: £{{product.price}}</p>
-                                    <p>Spaces: {{product.spaces - cartCount(product.id)}}</p>
+                                    <button v-on:click="addToCart(product)" :disabled="!canAddToCart(product)" class="btn btn-primary">
+                                        Add to cart
+                                    </button>
+                                    <span v-if="product.spaces === cartCount(product.id)">
+                                        All out!
+                                    </span>
                                 </div>
-                                <div class="icon">
-                                    <span :class="product.icon"></span>
-                                </div>
-                            </div>
-                            <div>
-                                <button v-on:click="addToCart(product)" :disabled="!canAddToCart(product)" class="btn btn-primary">
-                                    Add to cart
-                                </button>
-                                <span v-if="product.spaces === cartCount(product.id)">
-                                    All out!
-                                </span>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div v-else class="cart-and-checkout">

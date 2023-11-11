@@ -11,6 +11,7 @@ var webstore = new Vue({
     cart: [],
     customerName: "",
     customerPhone: "",
+    searchQuery: "",
   },
   methods: {
     addToCart(product) {
@@ -61,6 +62,21 @@ var webstore = new Vue({
     toggleSortOrder(order) {
       this.sortOrder = order;
     },
+    // search function
+    searchedResults(lessons) {
+      // check if the search query is not empty first
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+
+        // convert texts to lowercase before checking if the search query matches subject or location
+        return lessons.filter(
+          (product) =>
+            product.subject.toLowerCase().includes(query) ||
+            product.location.toLowerCase().includes(query)
+        );
+      }
+      return lessons;
+    },
   },
   computed: {
     sortedLessons() {
@@ -68,6 +84,11 @@ var webstore = new Vue({
       const order = this.sortOrder === "asc" ? 1 : -1;
 
       let lessons = this.products.slice(); // create a copy of the array
+
+      // if search input has text, filter matched results for the search query
+      if (this.searchQuery.trim()) {
+        lessons = this.searchedResults(lessons);
+      }
 
       return lessons.sort((a, b) => {
         // If sorting by remaining spaces, compare by (spaces - cartCount)
@@ -87,6 +108,7 @@ var webstore = new Vue({
     cartItemCount: function () {
       return this.cart.length || "";
     },
+    // method to check if the checkout form is valid
     isCheckoutFormValid() {
       const nameRegex = /^[a-zA-Z\s]*$/; // regex for letters only
       const phoneRegex = /^[0-9]*$/; // regex for numbers only
