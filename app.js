@@ -126,5 +126,11 @@ var webstore = new Vue({
         nameRegex.test(this.customerName) && phoneRegex.test(this.customerPhone)
       );
     },
+    // check if search query has no results
+    showNoResultsMessage() {
+      return (
+        this.searchQuery.trim().length !== 0 && this.sortedLessons.length === 0
+      );
+    },
   },
 });
