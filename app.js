@@ -57,6 +57,35 @@ var webstore = new Vue({
     },
     // checkout method
     checkout() {
+      // Prepare order data to send to the backend
+      const orderData = {
+        name: this.customerName,
+        phone: this.customerPhone,
+        lessonIds: this.cart,
+        space: this.cart.length,
+      };
+
+      // Send order data to "order" collection
+      fetch("http://localhost:3000/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          this.completeCheckout();
+        })
+        .catch((err) => console.error("Error sending order data:", err));
+    },
+    // update space after checkout and cleanup/refresh data
+    completeCheckout() {
       alert(
         `Checking out for ${this.customerName}. You will receive updates on ${this.customerPhone}`
       );
