@@ -1,24 +1,34 @@
-import { lessons } from "./lessons.js";
-
 var webstore = new Vue({
   el: "#app",
   data: {
     siteName: "After School Lesson",
     showProducts: true,
-    products: lessons,
-    sortCriteria: "subject", // default sort criteria
+    products: [],
+    sortCriteria: "topic", // default sort criteria
     sortOrder: "asc", // default sort order
     cart: [],
     customerName: "",
     customerPhone: "",
     searchQuery: "",
   },
+  mounted() {
+    // fetch lessons when application starts
+    this.fetchLessons();
+  },
   methods: {
+    fetchLessons() {
+      fetch("http://localhost:3000/lessons")
+        .then((res) => res.json())
+        .then((data) => (this.products = data))
+        .catch((err) =>
+          console.error("There was an error fetching the lessons:", err)
+        );
+    },
     addToCart(product) {
       this.cart.push(product.id);
     },
     canAddToCart(product) {
-      return product.spaces > this.cartCount(product.id);
+      return product.space > this.cartCount(product.id);
     },
     cartCount(id) {
       let count = 0;
@@ -51,6 +61,33 @@ var webstore = new Vue({
         `Checking out for ${this.customerName}. You will receive updates on ${this.customerPhone}`
       );
 
+      const updatePromises = this.cart.map((productId) => {
+        const product = this.products.find((p) => p.id === productId);
+
+        // Check if the product exists and has space available
+        if (product && product.space > 0) {
+          return fetch(`http://localhost:3000/lessons/${product._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ space: product.space - 1 }), // reduce space by 1
+          });
+        }
+      });
+
+      Promise.all(updatePromises)
+        .then(() => {
+          // Fetch the updated lessons data
+          this.fetchLessons();
+        })
+        .catch((err) => console.error("Error updating lessons:", err));
+
+      // Clear the cart and reset checkout form
+      this.cart = [];
+      this.customerName = "";
+      this.customerPhone = "";
+
       // Go back to display lessons after checking out
       this.showProducts = true;
     },
@@ -68,10 +105,10 @@ var webstore = new Vue({
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
 
-        // convert texts to lowercase before checking if the search query matches subject or location
+        // convert texts to lowercase before checking if the search query matches topic or location
         return lessons.filter(
           (product) =>
-            product.subject.toLowerCase().includes(query) ||
+            product.topic.toLowerCase().includes(query) ||
             product.location.toLowerCase().includes(query)
         );
       }
@@ -91,12 +128,12 @@ var webstore = new Vue({
       }
 
       return lessons.sort((a, b) => {
-        // If sorting by remaining spaces, compare by (spaces - cartCount)
-        if (this.sortCriteria === "spaces") {
-          const remainingSpacesA = a.spaces - this.cartCount(a.id);
-          const remainingSpacesB = b.spaces - this.cartCount(b.id);
+        // If sorting by remaining space, compare by (space - cartCount)
+        if (this.sortCriteria === "space") {
+          const remainingSpaceA = a.space - this.cartCount(a.id);
+          const remainingSpaceB = b.space - this.cartCount(b.id);
 
-          return (remainingSpacesA - remainingSpacesB) * order;
+          return (remainingSpaceA - remainingSpaceB) * order;
         }
 
         // For oher sorting criteria
