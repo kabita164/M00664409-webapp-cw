@@ -131,20 +131,13 @@ var webstore = new Vue({
     toggleSortOrder(order) {
       this.sortOrder = order;
     },
-    // search function
-    searchedResults(lessons) {
-      // check if the search query is not empty first
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-
-        // convert texts to lowercase before checking if the search query matches topic or location
-        return lessons.filter(
-          (product) =>
-            product.topic.toLowerCase().includes(query) ||
-            product.location.toLowerCase().includes(query)
-        );
-      }
-      return lessons;
+    performSearch() {
+      fetch(`${backendUrl}/search?q=${this.searchQuery}`)
+        .then((res) => res.json())
+        .then((data) => {
+          this.products = data;
+        })
+        .catch((err) => console.error("Error fetching search results:", err));
     },
   },
   computed: {
@@ -153,11 +146,6 @@ var webstore = new Vue({
       const order = this.sortOrder === "asc" ? 1 : -1;
 
       let lessons = this.products.slice(); // create a copy of the array
-
-      // if search input has text, filter matched results for the search query
-      if (this.searchQuery.trim()) {
-        lessons = this.searchedResults(lessons);
-      }
 
       return lessons.sort((a, b) => {
         // If sorting by remaining space, compare by (space - cartCount)
