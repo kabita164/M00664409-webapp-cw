@@ -1,3 +1,6 @@
+const backendUrl =
+  "http://webapp-cw-backend-k164.eu-west-2.elasticbeanstalk.com";
+
 var webstore = new Vue({
   el: "#app",
   data: {
@@ -17,7 +20,7 @@ var webstore = new Vue({
   },
   methods: {
     fetchLessons() {
-      fetch("http://localhost:3000/lessons")
+      fetch(`${backendUrl}/lessons`)
         .then((res) => res.json())
         .then((data) => (this.products = data))
         .catch((err) =>
@@ -66,7 +69,7 @@ var webstore = new Vue({
       };
 
       // Send order data to "order" collection
-      fetch("http://localhost:3000/order", {
+      fetch(`${backendUrl}/order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,9 +96,9 @@ var webstore = new Vue({
       const updatePromises = this.cart.map((productId) => {
         const product = this.products.find((p) => p.id === productId);
 
-        // Check if the product exists and has space available
+        // Check if the product exists and has space available before updating
         if (product && product.space > 0) {
-          return fetch(`http://localhost:3000/lessons/${product._id}`, {
+          return fetch(`${backendUrl}/lessons/${product._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
