@@ -18,6 +18,11 @@ var webstore = new Vue({
     // fetch lessons when application starts
     this.fetchLessons();
   },
+  created() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  },
   methods: {
     fetchLessons() {
       fetch(`${backendUrl}/lessons`)
