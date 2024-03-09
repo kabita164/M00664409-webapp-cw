@@ -1,5 +1,5 @@
 const backendUrl =
-  "http://webapp-cw-backend-k164.eu-west-2.elasticbeanstalk.com";
+  "https://webapp-cw-backend-k164.eu-west-2.elasticbeanstalk.com";
 
 var webstore = new Vue({
   el: "#app",
