@@ -54,7 +54,7 @@ import LessonList from "./components/LessonList.vue";
 import Checkout from "./components/Checkout.vue";
 
 const backendUrl =
-  "http://webapp-cw-backend-k164.eu-west-2.elasticbeanstalk.com";
+  "https://webapp-cw-kp-env.eba-srg7t2hn.eu-west-2.elasticbeanstalk.com";
 
 export default {
   name: "App",
