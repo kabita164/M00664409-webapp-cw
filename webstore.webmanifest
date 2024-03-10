@@ -4,22 +4,22 @@
     "description": "Online lessons booking",
     "icons": [
         {
-            "src": "images/icon-32.png",
+            "src": "/M00664409-webapp-cw/images/icon-32.png",
             "sizes": "32x32",
             "type": "image/png"
         },
         {
-            "src": "images/icon-192.png",
+            "src": "/M00664409-webapp-cw/images/icon-192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "images/icon-512.png",
+            "src": "/M00664409-webapp-cw/images/icon-512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "start_url": "index.html",
+    "start_url": "/M00664409-webapp-cw/index.html",
     "display": "fullscreen",
     "background_color": "#222222"
 }
