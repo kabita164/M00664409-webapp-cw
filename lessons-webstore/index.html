@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+
+  <div id="app">
+    <!-- Navigations -->
+    <header>
+        <nav class="navbar navbar-light bg-light">
+            <div class="container">
+                <div class="left mr-auto">
+                    <span class="navbar-brand mb-0 h1" v-text="siteName"></span>
+                </div>
+                <div class="right">
+                    <button v-on:click="showCheckout" :disabled="!cartItemCount > 0 && showProducts" class="btn btn-dark">
+                        {{ cartItemCount }} 
+                        <span class="fas fa-cart-plus"></span>
+                        Cart
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">            
+        <main class="my-5">
+            <div v-if="showProducts" class="products-section row">
+                <!-- Search input -->
+                <div class="search-bar mb-4">
+                    <input type="text" class="form-control" v-model="searchQuery"  @keyup="performSearch" placeholder="Search lessons...">
+                </div>
+
+                <div class="row">
+                    <!-- Sort settings section -->
+                    <div class="col-3">
+                        <p>Sort by</p>
+                        <hr>
+                        <div class="sorting-criteria">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortBy" id="topic" v-model="sortCriteria" value="topic" @change="setSortCriteria('topic')" checked>
+                                <label class="form-check-label" for="topic">
+                                    Subject
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortBy" id="location" v-model="sortCriteria" value="location" @change="setSortCriteria('location')">
+                                <label class="form-check-label" for="location">
+                                    Location
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortBy" id="price" v-model="sortCriteria" value="price" @change="setSortCriteria('price')">
+                                <label class="form-check-label" for="price">
+                                    Price
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortBy" id="space" v-model="sortCriteria" value="space" @change="setSortCriteria('space')">
+                                <label class="form-check-label" for="space">
+                                    Availability
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="sorting-order">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortOrder" id="asc" v-model="sortOrder" value="asc" @change="toggleSortOrder('asc')" checked>
+                                <label class="form-check-label" for="asc">
+                                    Ascending
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortOrder" id="desc" v-model="sortOrder" value="desc" @change="toggleSortOrder('desc')">
+                                <label class="form-check-label" for="desc">
+                                    Descending
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Display of lessons -->
+                    <div class="col-9 products">
+                        <div v-for="product in sortedLessons" class="product">
+                            <div class="product-details">
+                                <div>
+                                    <p>Subject: {{product.topic}}</p>
+                                    <p>Location: {{product.location}}</p>
+                                    <p>Price: £{{product.price}}</p>
+                                    <p>Space: {{product.space - cartCount(product.id)}}</p>
+                                </div>
+                                <div class="icon">
+                                    <span :class="product.icon"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <button v-on:click="addToCart(product)" :disabled="!canAddToCart(product)" class="btn btn-primary">
+                                    Add to cart
+                                </button>
+                                <span v-if="product.space === cartCount(product.id)">
+                                    All out!
+                                </span>
+                            </div>
+                        </div>
+
+                        <div v-if="showNoResultsMessage">
+                            No results found!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div v-else class="cart-and-checkout">
+                <!-- Shopping cart section -->
+                <div class="cart-section">
+                    <h2 class="mb-4">Shopping Cart</h2>
+                    <div class="products">
+                        <div v-for="(product, index) in getCartProducts()" :key="`${product.id}-${index}`" class="cart-item product">
+                            <div class="product-details">
+                                <div>
+                                    <p>Subject: {{product.topic}}</p>
+                                    <p>Location: {{product.location}}</p>
+                                    <p>Price: £{{product.price}}</p>
+                                    <p>Space: {{product.space - cartCount(product.id)}}</p>
+                                </div>
+                                <div class="icon">
+                                    <span :class="product.icon"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <button v-on:click="removeFromCart(product.id)" class="btn btn-danger">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-5">
+
+                <!-- Checkout form -->
+                <div class="checkout-section">
+                    <h2 class="mb-4">Checkout</h2>
+                    <div class="mb-3">
+                        <label for="customerName" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="customerName" v-model="customerName" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="customerPhone" class="form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="customerPhone" v-model="customerPhone" />
+                    </div>
+
+                    <button v-on:click="checkout" class="btn btn-primary ":disabled="!isCheckoutFormValid">Checkout</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</html>
