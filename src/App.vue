@@ -76,11 +76,11 @@ export default {
   mounted() {
     this.fetchLessons();
   },
-  // created() {
-  //   if ("serviceWorker" in navigator) {
-  //     navigator.serviceWorker.register("service-worker.js");
-  //   }
-  // },
+  created() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  },
   watch: {
     searchQuery(newQuery) {
       this.performSearch();
